@@ -113,54 +113,56 @@ export function stringifyWhereUnique(data: DMMF.Model) {
   const annotations = extractAnnotations(data.documentation);
   if (annotations.isHidden) return undefined;
 
-  const uniqueCompositeFields = data.uniqueFields.map((fields) => {
-    const compositeName = fields.join("_");
-    const fieldObjects = fields.map(
-      // biome-ignore lint/style/noNonNullAssertion: this must exist
-      (f) => data.fields.find((field) => field.name === f)!,
-    );
+  const uniqueCompositeFields = data.uniqueFields
+    .filter((fields) => fields.length > 1)
+    .map((fields) => {
+      const compositeName = fields.join("_");
+      const fieldObjects = fields.map(
+        // biome-ignore lint/style/noNonNullAssertion: this must exist
+        (f) => data.fields.find((field) => field.name === f)!,
+      );
 
-    const stringifiedFieldObjects = fieldObjects.map((f) => {
-      const annotations = extractAnnotations(f.documentation);
-      if (annotations.isHidden) return undefined;
-      let stringifiedType = "";
+      const stringifiedFieldObjects = fieldObjects.map((f) => {
+        const annotations = extractAnnotations(f.documentation);
+        if (annotations.isHidden) return undefined;
+        let stringifiedType = "";
 
-      if (isPrimitivePrismaFieldType(f.type)) {
-        const overwrittenType = annotations.annotations
-          .filter(isTypeOverwriteVariant)
-          .at(0)?.value;
+        if (isPrimitivePrismaFieldType(f.type)) {
+          const overwrittenType = annotations.annotations
+            .filter(isTypeOverwriteVariant)
+            .at(0)?.value;
 
-        if (overwrittenType) {
-          stringifiedType = overwrittenType;
+          if (overwrittenType) {
+            stringifiedType = overwrittenType;
+          } else {
+            stringifiedType = stringifyPrimitiveType({
+              fieldType: f.type as PrimitivePrismaFieldType,
+              options: generateTypeboxOptions({
+                exludeAdditionalProperties: false,
+                input: annotations,
+              }),
+            });
+          }
+        } else if (processedEnums.find((e) => e.name === f.type)) {
+          // biome-ignore lint/style/noNonNullAssertion: we checked this manually
+          stringifiedType = processedEnums.find(
+            (e) => e.name === f.type,
+          )!.stringRepresentation;
         } else {
-          stringifiedType = stringifyPrimitiveType({
-            fieldType: f.type as PrimitivePrismaFieldType,
-            options: generateTypeboxOptions({
-              exludeAdditionalProperties: false,
-              input: annotations,
-            }),
-          });
+          throw new Error("Invalid type for unique composite generation");
         }
-      } else if (processedEnums.find((e) => e.name === f.type)) {
-        // biome-ignore lint/style/noNonNullAssertion: we checked this manually
-        stringifiedType = processedEnums.find(
-          (e) => e.name === f.type,
-        )!.stringRepresentation;
-      } else {
-        throw new Error("Invalid type for unique composite generation");
-      }
 
-      return `${f.name}: ${stringifiedType}`;
+        return `${f.name}: ${stringifiedType}`;
+      });
+
+      const compositeObject = `${
+        getConfig().typeboxImportVariableName
+      }.Object({${stringifiedFieldObjects.join(
+        ",",
+      )}}, ${generateTypeboxOptions({ exludeAdditionalProperties: true })})`;
+
+      return `${compositeName}: ${compositeObject}`;
     });
-
-    const compositeObject = `${
-      getConfig().typeboxImportVariableName
-    }.Object({${stringifiedFieldObjects.join(
-      ",",
-    )}}, ${generateTypeboxOptions({ exludeAdditionalProperties: true })})`;
-
-    return `${compositeName}: ${compositeObject}`;
-  });
 
   const allFields = data.fields
     .map((field) => {
