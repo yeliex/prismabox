@@ -5,13 +5,14 @@ Generate versatile [typebox](https://github.com/sinclairzx81/typebox) schemes fr
 
 Install it in your project,
 ```bash
-npm i -D prismabox
-pnpm i -D prismabox
-bun add -D prismabox
+npm i -D @yeliex/prismabox
+pnpm i -D @yeliex/prismabox
+bun add -D @yeliex/prismabox
 ```
 
 If you use Prisma 7+, configure your datasource URL in `prisma.config.ts` (instead of `schema.prisma`) before running `prisma generate`.
 
+Even when you install the scoped package, the Prisma generator provider stays `prismabox` because the published bin name is still `prismabox`.
  then add
 ```prisma
 generator prismabox {

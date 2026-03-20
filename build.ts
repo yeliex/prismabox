@@ -26,7 +26,7 @@ if (output.errors.length > 0) {
   console.info("Built successfully!");
 }
 
-let version = process.env.REF_NAME ?? packagejson.version;
+let version = process.env.PACKAGE_VERSION ?? packagejson.version;
 if (!version) {
   version = "0.0.1";
 }

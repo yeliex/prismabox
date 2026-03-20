@@ -1,5 +1,5 @@
 {
-  "name": "prismabox",
+  "name": "@yeliex/prismabox",
   "version": "2.2.0",
   "license": "MIT",
   "description": "Typebox generator for prisma schema",
@@ -16,9 +16,16 @@
     "typebox-generator",
     "prismabox"
   ],
-  "homepage": "https://github.com/m1212e/prismabox",
+  "homepage": "https://github.com/yeliex/prismabox",
   "repository": {
-    "url": "https://github.com/m1212e/prismabox.git"
+    "type": "git",
+    "url": "https://github.com/yeliex/prismabox.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yeliex/prismabox/issues"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "dev": "bun run build && bunx prisma generate",
