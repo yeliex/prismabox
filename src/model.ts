@@ -75,7 +75,10 @@ export function mapAllModelsForWrite() {
     const relations = processedRelations.find((e) => e.name === key);
     let composite: string;
     if (plain && relations) {
-      composite = makeComposite([`${key}Plain`, `${key}Relations`]);
+      composite = makeComposite(
+        [`${key}Plain`, `${key}Relations`],
+        [false, true],
+      );
     } else if (plain) {
       composite = `${key}Plain`;
     } else if (relations) {
