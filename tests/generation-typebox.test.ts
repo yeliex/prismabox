@@ -74,8 +74,10 @@ describe("typebox generation mode", () => {
     const uint8Compat = mappings.get(TYPEBOX_UINT8_ARRAY_NAME) ?? "";
     expect(dateCompat).toContain("Type.Refine(");
     expect(dateCompat).toContain("Type.Unsafe<globalThis.Date>");
+    expect(dateCompat).toContain('(_value) => "must be Date"');
     expect(uint8Compat).toContain("Type.Refine(");
     expect(uint8Compat).toContain("Type.Unsafe<globalThis.Uint8Array>");
+    expect(uint8Compat).toContain('(_value) => "must be Uint8Array"');
   });
 
   test("uses cyclic in where generation when recursion is enabled", () => {

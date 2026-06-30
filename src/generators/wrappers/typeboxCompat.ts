@@ -27,7 +27,7 @@ export function ${TYPEBOX_DATE_NAME}(options?: Record<string, unknown>) {
   return ${typeboxImportVariableName}.Refine(
     ${typeboxImportVariableName}.Unsafe<globalThis.Date>({ ...(options ?? {}) }),
     (value) => value instanceof globalThis.Date,
-    "must be Date",
+    (_value) => "must be Date",
   )
 }\n`;
 }
@@ -48,7 +48,7 @@ export function ${TYPEBOX_UINT8_ARRAY_NAME}(options?: Record<string, unknown>) {
       ...(options ?? {}),
     }),
     (value) => value instanceof globalThis.Uint8Array,
-    "must be Uint8Array",
+    (_value) => "must be Uint8Array",
   )
 }\n`;
 }
