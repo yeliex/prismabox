@@ -19,7 +19,7 @@
   "homepage": "https://github.com/yeliex/prismabox",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yeliex/prismabox.git"
+    "url": "git+https://github.com/yeliex/prismabox.git"
   },
   "bugs": {
     "url": "https://github.com/yeliex/prismabox/issues"
